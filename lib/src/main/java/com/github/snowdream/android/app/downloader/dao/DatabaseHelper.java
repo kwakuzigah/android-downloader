@@ -26,6 +26,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Database helper class used to manage the creation and upgrading of your
@@ -46,6 +47,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // increase the database version
     private static final int DATABASE_VERSION = 1;
 
+    // we do this so there is only one helper
+    private static DatabaseHelper helper = null;
+    private static final AtomicInteger usageCounter = new AtomicInteger(0);
+
     // the DAO object we use to access the table
     private Dao<DownloadTask, Integer> taskDao = null;
 
@@ -53,6 +58,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         //super(context, DATABASE_NAME, null, DATABASE_VERSION, R.assets.ormlite_config);
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
+    /**
+     * Get the helper, possibly constructing it if necessary. For each call to this method, there should be 1 and only 1
+     * call to {@link #close()}.
+     */
+    public static synchronized DatabaseHelper getHelper(Context context) {
+        if (helper == null) {
+            helper = new DatabaseHelper(context);
+        }
+        usageCounter.incrementAndGet();
+        return helper;
+    }
+
 
     /**
      * This is called when the database is first created. Usually you should
@@ -102,11 +120,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /**
-     * Close the database connections and clear any cached DAOs.
+     * Close the database connections and clear any cached DAOs. For each call to {@link #getHelper(Context)}, there
+     * should be 1 and only 1 call to this method. If there were 3 calls to {@link #getHelper(Context)} then on the 3rd
+     * call to this method, the helper and the underlying database connections will be closed.
      */
     @Override
     public void close() {
-        super.close();
-        taskDao = null;
+        if (usageCounter.decrementAndGet() == 0) {
+            super.close();
+            taskDao = null;
+            helper = null;
+        }
     }
 }
