@@ -18,7 +18,6 @@ package com.github.snowdream.android.app.downloader.dao;
 
 import android.content.Context;
 import com.github.snowdream.android.app.downloader.DownloadTask;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -42,9 +41,8 @@ public class ISqlImpl implements ISql {
      * You'll need this in your class to release the helper when done.
      */
     public void Release() {
-
         if (databaseHelper != null) {
-            OpenHelperManager.releaseHelper();
+            databaseHelper.close();
             databaseHelper = null;
         }
     }
@@ -55,7 +53,7 @@ public class ISqlImpl implements ISql {
      */
     private DatabaseHelper getHelper() {
         if (databaseHelper == null) {
-            databaseHelper = OpenHelperManager.getHelper(mContext, DatabaseHelper.class);
+            databaseHelper = DatabaseHelper.getHelper(mContext);
         }
         return databaseHelper;
     }
