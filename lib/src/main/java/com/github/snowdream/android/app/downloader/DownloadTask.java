@@ -37,56 +37,58 @@ public class DownloadTask extends Object {
     /**
      * the time of finish downloading
      */
-    @DatabaseField
+    @DatabaseField(columnName = "finishTime")
     private long finishTime = 0;
     /**
      * id
      */
-    @DatabaseField(generatedId = true, canBeNull = false)
+    @DatabaseField(columnName = "id",generatedId = true, canBeNull = false)
     private int id = 0;
+
     @DatabaseField(persisted = false)
     private DownloadListener listener = null;
     /**
      * mimetype
      */
-    @DatabaseField
+    @DatabaseField(columnName = "mimeType")
     private String mimeType = "";
     /**
      * name
      */
-    @DatabaseField
+    @DatabaseField(columnName = "name")
     private String name = "";
     /**
      * the save path on the sdcard
      */
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "path",canBeNull = false)
     private String path = "";
     /**
      * total size
      */
-    @DatabaseField
+    @DatabaseField(columnName = "size")
     private long size = 0;
     /**
      * the time of start downloading
      */
-    @DatabaseField
+    @DatabaseField(columnName = "startTime")
     private long startTime = 0;
     /**
      * download status
      */
-    @DatabaseField
+    @DatabaseField(columnName = "status")
     private int status = DownloadStatus.STATUS_PENDING;
+
     @DatabaseField(persisted = false)
     private AsycDownloadTask task = null;
     /**
      * type
      */
-    @DatabaseField
+    @DatabaseField(columnName = "type")
     private int type = DownloadType.TYPE_UNKNOWN;
     /**
      * url
      */
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "url",canBeNull = false)
     private String url = "";
 
     @SuppressWarnings("unused")
