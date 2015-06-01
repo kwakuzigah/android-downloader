@@ -24,18 +24,3 @@
 -keep interface net.simonvt.menudrawer.** { *; }
 
 -dontwarn net.simonvt.menudrawer.**
--keepattributes Signature
--keep class com.github.snowdream.android.app.downloader.DownloadTask { *; }
-
--keep class com.j256.**
--keepclassmembers class com.j256.** { *; }
--keep enum com.j256.**
--keepclassmembers enum com.j256.** { *; }
--keep interface com.j256.**
--keepclassmembers interface com.j256.** { *; }
-
--keepclassmembers class * {
-  public <init>(android.content.Context);
-}
-
--keepattributes *Annotation*
